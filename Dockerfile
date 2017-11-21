@@ -50,8 +50,9 @@ RUN unzip instantclient_12_1.zip && \
     ln -s libocci.so.12.1 libocci.so
 
 ENV ORACLE_BASE /usr/lib/instantclient_12_1
-ENV LD_LIBRARY_PATH /usr/lib/instantclient_12_1
+ENV LD_LIBRARY_PATH /usr/lib/instantclient_12_1/lib
 ENV TNS_ADMIN /usr/lib/instantclient_12_1
 ENV ORACLE_HOME /usr/lib/instantclient_12_1
+ENV PATH "$PATH:$ORACLE_HOME/bin"
 
 RUN gem install bundler
