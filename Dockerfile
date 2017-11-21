@@ -43,7 +43,11 @@ RUN unzip instantclient_12_1.zip && \
     ln /usr/lib/instantclient_12_1/libclntsh.so.12.1 /usr/lib/libclntsh.so && \
     ln /usr/lib/instantclient_12_1/libocci.so.12.1 /usr/lib/libocci.so && \
     ln /usr/lib/instantclient_12_1/libociei.so /usr/lib/libociei.so && \
-    ln /usr/lib/instantclient_12_1/libnnz12.so /usr/lib/libnnz12.so
+    ln /usr/lib/instantclient_12_1/libnnz12.so /usr/lib/libnnz12.so && \
+    cd /usr/lib/instantclient_12_1 && \
+    ln -s libclntsh.so.12.1 libclntsh.so && \
+    ln -s libclntshcore.so.12.1 libclntshcore.so && \
+    ln -s libocci.so.12.1 libocci.so
 
 ENV ORACLE_BASE /usr/lib/instantclient_12_1
 ENV LD_LIBRARY_PATH /usr/lib/instantclient_12_1
