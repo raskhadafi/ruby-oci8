@@ -1,58 +1,50 @@
-FROM ruby:2.3.5-alpine
+FROM       oraclelinux
 MAINTAINER Roman Simecek <raskhadafi@good2go.ch>
 
-RUN ALPINE_GLIBC_BASE_URL="https://github.com/sgerrand/alpine-pkg-glibc/releases/download" && \
-    ALPINE_GLIBC_PACKAGE_VERSION="2.26-r0" && \
-    ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
-    ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
-    ALPINE_GLIBC_I18N_PACKAGE_FILENAME="glibc-i18n-$ALPINE_GLIBC_PACKAGE_VERSION.apk" && \
-    apk add --no-cache --virtual=.build-dependencies wget ca-certificates && \
+RUN yum -y update && yum -y groupinstall 'Development Tools' && yum -y install \
+    libcurl-devel \
+    openssl-devel \
+    readline-devel \
+    openssl-devel \
+    zlib-devel \
     wget \
-        "https://raw.githubusercontent.com/andyshinn/alpine-pkg-glibc/master/sgerrand.rsa.pub" \
-        -O "/etc/apk/keys/sgerrand.rsa.pub" && \
-    wget \
-        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
-    apk add --no-cache \
-        "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" && \
-    \
-    rm "/etc/apk/keys/sgerrand.rsa.pub" && \
-    /usr/glibc-compat/bin/localedef --force --inputfile POSIX --charmap UTF-8 C.UTF-8 || true && \
-    echo "export LANG=C.UTF-8" > /etc/profile.d/locale.sh && \
-    \
-    apk del glibc-i18n && \
-    \
-    rm "/root/.wget-hsts" && \
-    apk del .build-dependencies && \
-    rm \
-        "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_I18N_PACKAGE_FILENAME"
+    git && \
+    yum clean all
 
-ENV LANG=C.UTF-8
 
-RUN apk update && apk add libaio
+ENV INSTANT_CLIENT_VERSION 12.2.0.1.0-1
+COPY "oracle-instantclient12.2-*-$INSTANT_CLIENT_VERSION.x86_64.rpm" $HOME/
+RUN yum -y update && yum -y install libaio && \
+    rpm -i "oracle-instantclient12.2-basic-$INSTANT_CLIENT_VERSION.x86_64.rpm" && \
+    rpm -i "oracle-instantclient12.2-devel-$INSTANT_CLIENT_VERSION.x86_64.rpm" && \
+    rpm -i "oracle-instantclient12.2-sqlplus-$INSTANT_CLIENT_VERSION.x86_64.rpm" && \
+    rm -rf oracle-instantclient12.2*.rpm
+ENV LD_LIBRARY_PATH=/usr/lib/oracle/12.2/client64/lib:$LD_LIBRARY_PATH
+RUN mkdir -p /usr/local/etc \
+    && { \
+        echo 'install: --no-document'; \
+        echo 'update: --no-document'; \
+    } >> /usr/local/etc/gemrc
 
-COPY instantclient_12_1.zip ./
-RUN unzip instantclient_12_1.zip && \
-    mv instantclient_12_1/ /usr/lib/ && \
-    rm instantclient_12_1.zip && \
-    ln /usr/lib/instantclient_12_1/libclntsh.so.12.1 /usr/lib/libclntsh.so && \
-    ln /usr/lib/instantclient_12_1/libocci.so.12.1 /usr/lib/libocci.so && \
-    ln /usr/lib/instantclient_12_1/libociei.so /usr/lib/libociei.so && \
-    ln /usr/lib/instantclient_12_1/libnnz12.so /usr/lib/libnnz12.so && \
-    cd /usr/lib/instantclient_12_1 && \
-    ln -s libclntsh.so.12.1 libclntsh.so && \
-    ln -s libclntshcore.so.12.1 libclntshcore.so && \
-    ln -s libocci.so.12.1 libocci.so
+ENV RUBY_MAJOR           2.3
+ENV RUBY_VERSION         2.3.5
+ENV RUBYGEMS_VERSION 2.7.3
+ENV BUNDLER_VERSION 1.16.0
 
-ENV ORACLE_BASE /usr/lib/instantclient_12_1
-ENV LD_LIBRARY_PATH /usr/lib/instantclient_12_1/lib
-ENV TNS_ADMIN /usr/lib/instantclient_12_1
-ENV ORACLE_HOME /usr/lib/instantclient_12_1
-ENV PATH "$PATH:$ORACLE_HOME/bin"
+RUN yum -y update && yum -y install ruby && yum clean all \
+    && mkdir -p /usr/src/ruby \
+    && curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2" \
+        | tar -xjC /usr/src/ruby --strip-components=1 \
+    && cd /usr/src/ruby \
+    && autoconf \
+    && ./configure --disable-install-doc \
+    && make -j"$(nproc)" \
+    && yum remove -y ruby \
+    && make install \
+    && rm -r /usr/src/ruby
 
-RUN gem install bundler
+RUN gem install bundler -v $BUNDLER_VERSION
+
+RUN gem install ruby-oci8
+
+CMD ["irb"]
