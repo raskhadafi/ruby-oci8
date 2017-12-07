@@ -1,6 +1,8 @@
 FROM       oraclelinux
 MAINTAINER Roman Simecek <raskhadafi@good2go.ch>
 
+ENV LANG=de_CH.UTF-8
+
 RUN yum -y update && yum -y groupinstall 'Development Tools' && yum -y install \
     libcurl-devel \
     openssl-devel \
