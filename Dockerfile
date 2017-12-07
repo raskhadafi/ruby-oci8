@@ -44,6 +44,7 @@ RUN yum -y update && yum -y install ruby && yum clean all \
     && rm -r /usr/src/ruby
 
 RUN gem install bundler -v $BUNDLER_VERSION
+RUN bundle config --global silence_root_warning 1
 
 RUN gem install ruby-oci8
 
