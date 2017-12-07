@@ -47,9 +47,16 @@ RUN yum -y update && yum -y install ruby && yum clean all \
     && rm -r /usr/src/ruby
 
 RUN gem update --system
-RUN gem install bundler -v $BUNDLER_VERSION
 RUN bundle config --global silence_root_warning 1
-RUN yum -y install ImageMagick && yum clean all
-RUN gem install ruby-oci8
+RUN yum -y update && yum -y install tcl-devel libpng-devel libjpeg-devel ghostscript-devel bzip2-devel freetype-devel libtiff-devel libpng12-devel.i686 ImageMagick-devel && \
+    wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick-6.9.9-26.tar.gz && \
+    tar zxvf ImageMagick-*.tar.gz && \
+    cd ImageMagick-* && \
+    ./configure && \
+    make && \
+    make install
+ENV PKG_CONFIG_PATH /usr/local/lib/pkgconfig
+RUN gem install rmagick ruby-oci8
+RUN yum clean all && rm -rf /var/cache/yum
 
 CMD ["irb"]
