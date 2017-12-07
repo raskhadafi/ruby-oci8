@@ -10,6 +10,7 @@ RUN yum -y update && yum -y groupinstall 'Development Tools' && yum -y install \
     openssl-devel \
     zlib-devel \
     wget \
+    which \
     git && \
     yum clean all
 
