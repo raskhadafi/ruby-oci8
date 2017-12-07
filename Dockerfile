@@ -45,6 +45,7 @@ RUN yum -y update && yum -y install ruby && yum clean all \
     && make install \
     && rm -r /usr/src/ruby
 
+RUN gem update --system
 RUN gem install bundler -v $BUNDLER_VERSION
 RUN bundle config --global silence_root_warning 1
 
