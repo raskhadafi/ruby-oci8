@@ -48,7 +48,7 @@ RUN yum -y update && yum -y install ruby && yum clean all \
 RUN gem update --system
 RUN gem install bundler -v $BUNDLER_VERSION
 RUN bundle config --global silence_root_warning 1
-
+RUN yum -y install ImageMagick && yum clean all
 RUN gem install ruby-oci8
 
 CMD ["irb"]
