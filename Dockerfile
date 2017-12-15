@@ -1,4 +1,4 @@
-FROM       oraclelinux
+FROM       oraclelinux:7-slim
 MAINTAINER Roman Simecek <raskhadafi@good2go.ch>
 
 ENV LANG                   de_CH.utf8
