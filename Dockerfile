@@ -90,6 +90,10 @@ RUN set -ex \
   done
 
 ENV NODE_VERSION 9.3.0
+ENV SWISSMATCH_DATA /swissmatch
+
+RUN mkdir $SWISSMATCH_DATA
+COPY "locations_*.binary" $SWISSMATCH_DATA/
 
 RUN ARCH= && dpkgArch="$(arch)" \
   && case "${dpkgArch##*-}" in \
