@@ -109,4 +109,8 @@ RUN ARCH= && dpkgArch="$(arch)" \
   && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
+RUN cd /etc/pki/ca-trust/source/anchors/ && \
+    wget https://www.digicert.com/CACerts/DigiCertSHA2SecureServerCA.crt && \
+    update-ca-trust extract
+
 CMD ["irb"]
