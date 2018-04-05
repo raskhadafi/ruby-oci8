@@ -34,6 +34,7 @@ RUN mkdir -p /usr/local/etc \
     && { \
         echo 'install: --no-document'; \
         echo 'update: --no-document'; \
+        echo ':ssl_verify_mode: 0'; \
     } >> /usr/local/etc/gemrc
 
 RUN yum -y update && yum -y install ruby && yum clean all \
