@@ -3,6 +3,7 @@ MAINTAINER Roman Simecek <raskhadafi@good2go.ch>
 
 ENV LANG                   de_CH.utf8
 ENV LC_CTYPE               de_CH.utf8
+ENV NLS_LANG               American_America.UTF8
 ENV PKG_CONFIG_PATH        /usr/local/lib/pkgconfig
 ENV INSTANT_CLIENT_VERSION 12.2.0.1.0-1
 ENV LD_LIBRARY_PATH        /usr/lib/oracle/12.2/client64/lib:$LD_LIBRARY_PATH
