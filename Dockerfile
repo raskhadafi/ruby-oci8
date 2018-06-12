@@ -8,8 +8,8 @@ ENV NLS_LANG               American_America.UTF8
 ENV PKG_CONFIG_PATH        /usr/local/lib/pkgconfig
 ENV INSTANT_CLIENT_VERSION 12.2.0.1.0-1
 ENV LD_LIBRARY_PATH        /usr/lib/oracle/12.2/client64/lib:$LD_LIBRARY_PATH
-ENV RUBY_MAJOR             2.3
-ENV RUBY_VERSION           2.3.6
+ENV RUBY_MAJOR             2.4
+ENV RUBY_VERSION           2.4.4
 
 COPY "oracle-instantclient12.2-*-$INSTANT_CLIENT_VERSION.x86_64.rpm" $HOME/
 
