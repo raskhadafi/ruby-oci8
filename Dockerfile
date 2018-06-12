@@ -1,8 +1,9 @@
 FROM       oraclelinux:7-slim
 MAINTAINER Roman Simecek <raskhadafi@good2go.ch>
 
-ENV LANG                   de_CH.utf8
-ENV LC_CTYPE               de_CH.utf8
+ENV LANG                   en_US.utf8
+ENV LC_ALL                 en_US.utf8
+ENV LC_CTYPE               en_US.utf8
 ENV NLS_LANG               American_America.UTF8
 ENV PKG_CONFIG_PATH        /usr/local/lib/pkgconfig
 ENV INSTANT_CLIENT_VERSION 12.2.0.1.0-1
