@@ -115,6 +115,10 @@ RUN cd /etc/pki/ca-trust/source/anchors/ && \
     wget https://www.digicert.com/CACerts/DigiCertSHA2SecureServerCA.crt && \
     update-ca-trust extract
 
+RUN wget http://dl.google.com/linux/chrome/rpm/stable/x86_64//google-chrome-stable-67.0.3396.99-1.x86_64.rpm && \
+    yum -y install google-chrome-stable-67.0.3396.99-1.x86_64.rpm && \
+    rm -f google-chrome-stable-67.0.3396.99-1.x86_64.rpm
+
 RUN wget -N http://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
     chmod +x /usr/local/bin/chromedriver && \
