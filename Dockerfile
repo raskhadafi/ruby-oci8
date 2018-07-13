@@ -115,4 +115,9 @@ RUN cd /etc/pki/ca-trust/source/anchors/ && \
     wget https://www.digicert.com/CACerts/DigiCertSHA2SecureServerCA.crt && \
     update-ca-trust extract
 
+RUN wget -N http://chromedriver.storage.googleapis.com/2.40/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip -d /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chromedriver && \
+    rm -f chromedriver_linux64.zip
+
 CMD ["irb"]
