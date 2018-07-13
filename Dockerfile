@@ -67,7 +67,7 @@ RUN yum -y update && \
       libtiff-devel \
       libpng12-devel.i686 \
       ImageMagick-devel && \
-    wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick-6.9.9-*.tar.gz && \
+    wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick-6.9.*.tar.gz && \
     tar zxvf ImageMagick-*.tar.gz && \
     cd ImageMagick-* && \
     ./configure && \
